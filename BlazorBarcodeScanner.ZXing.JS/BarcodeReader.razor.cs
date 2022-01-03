@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -194,8 +194,10 @@ namespace BlazorBarcodeScanner.ZXing.JS
         private async void ReceivedBarcodeText(BarcodeReceivedEventArgs args)
         {
             BarcodeText = args.BarcodeText;
-            await OnBarcodeReceived.InvokeAsync(args);
+            await InvokeAsync(() => {
+                OnBarcodeReceived.InvokeAsync(args);
             StateHasChanged();
+                });
         }
 
         protected void ChangeVideoInputSource(string deviceId)
