@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -104,7 +104,7 @@ namespace BlazorBarcodeScanner.ZXing.JS
         private BarcodeReaderInterop _backend;
         private ElementReference _video;
         private ElementReference _canvas;
-
+        
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -124,7 +124,7 @@ namespace BlazorBarcodeScanner.ZXing.JS
         
         public void Dispose()
         {
-            StopDecoding();
+            StopDecodingInternal();
         }
 
         private async Task GetVideoInputDevicesAsync()
@@ -160,10 +160,15 @@ namespace BlazorBarcodeScanner.ZXing.JS
 
         public void StopDecoding()
         {
+            StopDecodingInternal();
+            StateHasChanged();
+        }
+
+        private void StopDecodingInternal()
+        {
             BarcodeReaderInterop.OnBarcodeReceived(string.Empty);
             _backend.StopDecoding();
             IsDecoding = false;
-            StateHasChanged();
         }
 
         public void UpdateResolution()
@@ -196,7 +201,7 @@ namespace BlazorBarcodeScanner.ZXing.JS
             BarcodeText = args.BarcodeText;
             await InvokeAsync(() => {
                 OnBarcodeReceived.InvokeAsync(args);
-            StateHasChanged();
+                StateHasChanged();
                 });
         }
 
